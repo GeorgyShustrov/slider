@@ -39,7 +39,9 @@ html {
   display: flex;
   justify-content: space-between;
 }
-
+.button-prev {
+  margin-right: 40px;
+}
 .button-next,
 .button-prev {
   height: 60px;
@@ -126,6 +128,10 @@ html {
     padding: 30px 80px 20px;
     max-width: 860px;
   }
+  .button-prev {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
 }
 @media (max-width: 1024px) {
   body,
@@ -148,6 +154,8 @@ html {
   }
   .button-prev {
     order: 0;
+    margin-right: unset;
+    margin-left: unset;
   }
   .button-next,
   .button-prev {
