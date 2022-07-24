@@ -88,7 +88,7 @@ prevButton.addEventListener("click", prevSlide);
 setInterval(() => {
   //если переключали вручную, пропускаем 1 переключение
   if (!handleChanged) {
-    // nextSlide();
+    nextSlide();
   }
   handleChanged = false;
 }, 4000);
