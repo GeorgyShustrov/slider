@@ -10,6 +10,7 @@ html {
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  width: 100%;
 }
 
 .container {
@@ -20,7 +21,7 @@ html {
   display: flex;
   flex-flow: wrap;
   max-width: 1160px;
-
+  width: 100%;
   margin: auto;
 }
 .container-title {
@@ -72,7 +73,7 @@ html {
   display: flex;
   align-items: stretch;
   align-content: stretch;
-  width: 1160px;
+  width: 100%;
   overflow: hidden;
   position: relative;
 }
@@ -120,6 +121,12 @@ html {
   display: flex;
   align-items: end;
 }
+@media (max-width: 1442px) {
+  .container {
+    padding: 30px 80px 20px;
+    max-width: 860px;
+  }
+}
 @media (max-width: 1024px) {
   body,
   html {
@@ -127,14 +134,7 @@ html {
   }
   .container {
     padding: 30px 80px 20px;
-  }
-}
-@media (max-width: 800px) {
-  .container {
-    padding: 30px 100px 20px;
-  }
-  .slider-wrapper {
-    margin-left: 20px;
+    max-width: 560px;
   }
   .container-title {
     max-width: 100%;
@@ -156,6 +156,43 @@ html {
   }
   .dot {
     width: 60px;
+  }
+  .slider-dots {
+    order: 1;
+    justify-content: center;
+    min-width: unset;
+  }
+  .button-next {
+    order: 2;
+  }
+}
+@media (max-width: 722px) {
+  .container {
+    padding: 30px 20px 20px;
+    max-width: 282px;
+  }
+  .slider-wrapper {
+    margin-left: 10px;
+  }
+  .container-title {
+    max-width: 100%;
+    text-align: center;
+  }
+  .slider-control {
+    margin: 20px auto auto auto;
+    max-width: 262px;
+    order: 3;
+  }
+  .button-prev {
+    order: 0;
+  }
+  .button-next,
+  .button-prev {
+    height: 55px;
+    width: 55px;
+  }
+  .dot {
+    width: 21px;
   }
   .slider-dots {
     order: 1;
