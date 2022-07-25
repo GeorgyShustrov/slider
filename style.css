@@ -99,6 +99,7 @@ html {
   margin-bottom: 10px;
   height: 160px;
   width: auto;
+  pointer-events: none;
 }
 .item .date {
   font-size: 12px;

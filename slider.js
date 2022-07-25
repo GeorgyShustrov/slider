@@ -45,7 +45,7 @@ const nextSlide = () => {
   }, 500);
 
   activeIndex++;
-  activeSlide(activeIndex % dots.length);
+  activeSlide(activeIndex);
 };
 //показать предыдущий слайд
 const prevSlide = () => {
@@ -63,8 +63,8 @@ const prevSlide = () => {
       slides[i].style.left = offset2 * viewport + "px";
       offset2++;
     }
-    --activeIndex;
-    activeSlide(activeIndex % dots.length);
+    activeIndex--;
+    activeSlide(activeIndex);
   }, 0);
   setTimeout(() => {
     nextButton.addEventListener("click", nextSlide);
@@ -73,6 +73,13 @@ const prevSlide = () => {
 };
 //по индексу переставляем класс active
 const activeSlide = (index) => {
+  if (index < 0) {
+    activeIndex = dots.length - 1;
+    index = dots.length - 1;
+  } else if (index > dots.length - 1) {
+    activeIndex = 0;
+    index = 0;
+  }
   for (let i = 0; i < dots.length; i++) {
     dots[i].classList.remove("active");
     items[i].classList.remove("active");
@@ -92,8 +99,9 @@ setInterval(() => {
   handleChanged = false;
 }, 4000);
 let x1 = null;
-//y1 = null;
 slider.addEventListener("touchstart", handleTouchStart, false);
+slider.addEventListener("mousedown", onMouseDown, false);
+slider.addEventListener("mousemove", onMouseUp, false);
 slider.addEventListener("touchmove", handleTouchMove, false);
 function handleTouchStart(event) {
   const firstTouch = event.touches[0];
@@ -102,6 +110,23 @@ function handleTouchStart(event) {
 function handleTouchMove(event) {
   if (!x1) return false;
   let x2 = event.touches[0].clientX;
+
+  let xDif = x2 - x1;
+  if (xDif <= -150) {
+    nextSlide();
+    x1 = null;
+  } else if (xDif >= 150) {
+    prevSlide();
+    x1 = null;
+  }
+}
+function onMouseDown(event) {
+  const firstTouch = event.clientX;
+  x1 = firstTouch;
+}
+function onMouseUp(event) {
+  if (!x1) return false;
+  let x2 = event.clientX;
 
   let xDif = x2 - x1;
   if (xDif <= -150) {
