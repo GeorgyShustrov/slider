@@ -94,14 +94,14 @@ prevButton.addEventListener("click", prevSlide);
 setInterval(() => {
   //если переключали вручную, пропускаем 1 переключение
   if (!handleChanged) {
-    nextSlide();
+    //nextSlide();
   }
   handleChanged = false;
 }, 4000);
 let x1 = null;
 slider.addEventListener("touchstart", handleTouchStart, false);
 slider.addEventListener("mousedown", onMouseDown, false);
-slider.addEventListener("mousemove", onMouseUp, false);
+slider.addEventListener("mousemove", onMouseMove, false);
 slider.addEventListener("touchmove", handleTouchMove, false);
 function handleTouchStart(event) {
   const firstTouch = event.touches[0];
@@ -110,30 +110,35 @@ function handleTouchStart(event) {
 function handleTouchMove(event) {
   if (!x1) return false;
   let x2 = event.touches[0].clientX;
-
   let xDif = x2 - x1;
+
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.left = i * viewport + xDif * 2.5 + "px";
+  }
   if (xDif <= -150) {
+    x1 = null;
     nextSlide();
-    x1 = null;
   } else if (xDif >= 150) {
-    prevSlide();
     x1 = null;
+    prevSlide();
   }
 }
 function onMouseDown(event) {
   const firstTouch = event.clientX;
   x1 = firstTouch;
 }
-function onMouseUp(event) {
+function onMouseMove(event) {
   if (!x1) return false;
   let x2 = event.clientX;
-
   let xDif = x2 - x1;
+  for (let i = 0; i < slides.length; i++) {
+    slides[i].style.left = i * viewport + xDif * 2.5 + "px";
+  }
   if (xDif <= -150) {
+    x1 = null;
     nextSlide();
-    x1 = null;
   } else if (xDif >= 150) {
-    prevSlide();
     x1 = null;
+    prevSlide();
   }
 }
