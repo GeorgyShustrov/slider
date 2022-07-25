@@ -214,6 +214,10 @@ html {
 }
 
 @media (max-width: 450px) {
+  body,
+  html {
+    overflow-y: auto;
+  }
   .container {
     padding: 130px 20px 87px 20px;
   }
