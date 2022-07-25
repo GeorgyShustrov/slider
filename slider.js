@@ -24,6 +24,7 @@ for (let i = 0; i < slides.length; i++) {
 let activeIndex = 0;
 //показать следующий слайд
 const nextSlide = () => {
+  console.log("nextSlide");
   handleChanged = true;
   nextButton.removeEventListener("click", nextSlide);
   prevButton.removeEventListener("click", prevSlide);
@@ -49,6 +50,7 @@ const nextSlide = () => {
 };
 //показать предыдущий слайд
 const prevSlide = () => {
+  console.log("prevSlide");
   handleChanged = true;
   nextButton.removeEventListener("click", nextSlide);
   prevButton.removeEventListener("click", prevSlide);
@@ -98,30 +100,42 @@ setInterval(() => {
   }
   handleChanged = false;
 }, 4000);
-let x1 = null;
-slider.addEventListener("touchstart", handleTouchStart, false);
+let x1 = null,
+  xDif = null;
+
 slider.addEventListener("mousedown", onMouseDown, false);
 slider.addEventListener("mousemove", onMouseMove, false);
+slider.addEventListener("mouseup", onMouseUp, false);
+slider.addEventListener("mouseleave", onMouseUp, false);
+slider.addEventListener("touchstart", handleTouchStart, false);
 slider.addEventListener("touchmove", handleTouchMove, false);
+slider.addEventListener("touchend", handleTouchEnd, false);
 function handleTouchStart(event) {
+  console.log("handleTouchStart");
   const firstTouch = event.touches[0];
   x1 = firstTouch.clientX;
 }
 function handleTouchMove(event) {
   if (!x1) return false;
   let x2 = event.touches[0].clientX;
-  let xDif = x2 - x1;
-
+  xDif = x2 - x1;
+  if (Math.abs(xDif) >= 75) return false;
   for (let i = 0; i < slides.length; i++) {
-    slides[i].style.left = i * viewport + xDif * 2.5 + "px";
+    slides[i].style.left = i * viewport + xDif * 2 + "px";
   }
-  if (xDif <= -150) {
-    x1 = null;
+}
+function handleTouchEnd(event) {
+  if (xDif <= -75) {
     nextSlide();
-  } else if (xDif >= 150) {
-    x1 = null;
+  } else if (xDif >= 75) {
     prevSlide();
+  } else {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.left = i * viewport + "px";
+    }
   }
+  x1 = null;
+  xDif = null;
 }
 function onMouseDown(event) {
   const firstTouch = event.clientX;
@@ -130,15 +144,23 @@ function onMouseDown(event) {
 function onMouseMove(event) {
   if (!x1) return false;
   let x2 = event.clientX;
-  let xDif = x2 - x1;
+  xDif = x2 - x1;
+  if (Math.abs(xDif) >= 150) return false;
   for (let i = 0; i < slides.length; i++) {
-    slides[i].style.left = i * viewport + xDif * 2.5 + "px";
+    slides[i].style.left = i * viewport + xDif * 1.5 + "px";
   }
+}
+function onMouseUp(event) {
+  console.log("mouseup");
   if (xDif <= -150) {
-    x1 = null;
     nextSlide();
   } else if (xDif >= 150) {
-    x1 = null;
     prevSlide();
+  } else {
+    for (let i = 0; i < slides.length; i++) {
+      slides[i].style.left = i * viewport + "px";
+    }
   }
+  x1 = null;
+  xDif = null;
 }
