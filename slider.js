@@ -11,17 +11,19 @@ if (documentWidth < 400) {
 }
 let maxHeight = 420;
 let handleChanged = false;
+
 for (let i = 0; i < items.length; i++) {
   let curHeight = items[i].getBoundingClientRect().height;
   maxHeight = curHeight > maxHeight ? curHeight : maxHeight;
   slides.push(items[i]);
-  slides[i].style.left = i * viewport + "px";
+  slides[i].style.left = i * viewport - viewport + "px";
 }
 slider.style.height = maxHeight + "px";
 for (let i = 0; i < slides.length; i++) {
   slides[i].style.height = maxHeight + "px";
 }
 let activeIndex = 0;
+activeSlide(activeIndex);
 //показать следующий слайд
 const nextSlide = () => {
   console.log("nextSlide");
@@ -31,7 +33,7 @@ const nextSlide = () => {
   let offset2 = 0;
 
   for (let i = 0; i < slides.length; i++) {
-    slides[i].style.left = offset2 * viewport - viewport + "px";
+    slides[i].style.left = offset2 * viewport - viewport * 2 + "px";
     offset2++;
   }
 
@@ -62,7 +64,7 @@ const prevSlide = () => {
   slides.unshift(slide);
   setTimeout(() => {
     for (let i = 0; i < slides.length; i++) {
-      slides[i].style.left = offset2 * viewport + "px";
+      slides[i].style.left = offset2 * viewport - viewport + "px";
       offset2++;
     }
     activeIndex--;
@@ -74,7 +76,7 @@ const prevSlide = () => {
   }, 500);
 };
 //по индексу переставляем класс active
-const activeSlide = (index) => {
+function activeSlide(index) {
   if (index < 0) {
     activeIndex = dots.length - 1;
     index = dots.length - 1;
@@ -82,13 +84,14 @@ const activeSlide = (index) => {
     activeIndex = 0;
     index = 0;
   }
+  const activeItem = activeIndex + 1 > dots.length - 1 ? 0 : activeIndex + 1;
   for (let i = 0; i < dots.length; i++) {
     dots[i].classList.remove("active");
     items[i].classList.remove("active");
   }
-  items[index].classList.add("active");
+  items[activeItem].classList.add("active");
   dots[index].classList.add("active");
-};
+}
 //привязываем события на кнопки
 nextButton.addEventListener("click", nextSlide);
 prevButton.addEventListener("click", prevSlide);
@@ -121,7 +124,7 @@ function handleTouchMove(event) {
   xDif = x2 - x1;
   if (Math.abs(xDif) >= 75) return false;
   for (let i = 0; i < slides.length; i++) {
-    slides[i].style.left = i * viewport + xDif * 2 + "px";
+    slides[i].style.left = i * viewport - viewport + xDif * 2 + "px";
   }
 }
 function handleTouchEnd(event) {
@@ -131,7 +134,7 @@ function handleTouchEnd(event) {
     prevSlide();
   } else {
     for (let i = 0; i < slides.length; i++) {
-      slides[i].style.left = i * viewport + "px";
+      slides[i].style.left = i * viewport - viewport + "px";
     }
   }
   x1 = null;
@@ -147,7 +150,7 @@ function onMouseMove(event) {
   xDif = x2 - x1;
   if (Math.abs(xDif) >= 150) return false;
   for (let i = 0; i < slides.length; i++) {
-    slides[i].style.left = i * viewport + xDif * 1.5 + "px";
+    slides[i].style.left = i * viewport - viewport + xDif * 1.5 + "px";
   }
 }
 function onMouseUp(event) {
@@ -158,7 +161,7 @@ function onMouseUp(event) {
     prevSlide();
   } else {
     for (let i = 0; i < slides.length; i++) {
-      slides[i].style.left = i * viewport + "px";
+      slides[i].style.left = i * viewport - viewport + "px";
     }
   }
   x1 = null;
