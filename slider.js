@@ -54,7 +54,6 @@ const prevSlide = () => {
   prevButton.removeEventListener("click", prevSlide);
   let offset2 = 0;
   let slide = slides.pop();
-  console.log(slide);
   slide.remove();
   slide.style.left = -viewport + "px";
   slider.prepend(slide);
@@ -92,3 +91,24 @@ setInterval(() => {
   }
   handleChanged = false;
 }, 4000);
+let x1 = null;
+//y1 = null;
+slider.addEventListener("touchstart", handleTouchStart, false);
+slider.addEventListener("touchmove", handleTouchMove, false);
+function handleTouchStart(event) {
+  const firstTouch = event.touches[0];
+  x1 = firstTouch.clientX;
+}
+function handleTouchMove(event) {
+  if (!x1) return false;
+  let x2 = event.touches[0].clientX;
+
+  let xDif = x2 - x1;
+  if (xDif <= -150) {
+    nextSlide();
+    x1 = null;
+  } else if (xDif >= 150) {
+    prevSlide();
+    x1 = null;
+  }
+}
