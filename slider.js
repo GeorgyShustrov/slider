@@ -26,7 +26,6 @@ let activeIndex = 0;
 activeSlide(activeIndex);
 //показать следующий слайд
 const nextSlide = () => {
-  console.log("nextSlide");
   handleChanged = true;
   nextButton.removeEventListener("click", nextSlide);
   prevButton.removeEventListener("click", prevSlide);
@@ -52,7 +51,6 @@ const nextSlide = () => {
 };
 //показать предыдущий слайд
 const prevSlide = () => {
-  console.log("prevSlide");
   handleChanged = true;
   nextButton.removeEventListener("click", nextSlide);
   prevButton.removeEventListener("click", prevSlide);
@@ -99,7 +97,7 @@ prevButton.addEventListener("click", prevSlide);
 setInterval(() => {
   //если переключали вручную, пропускаем 1 переключение
   if (!handleChanged) {
-    //nextSlide();
+    nextSlide();
   }
   handleChanged = false;
 }, 4000);
@@ -114,12 +112,13 @@ slider.addEventListener("touchstart", handleTouchStart, false);
 slider.addEventListener("touchmove", handleTouchMove, false);
 slider.addEventListener("touchend", handleTouchEnd, false);
 function handleTouchStart(event) {
-  console.log("handleTouchStart");
   const firstTouch = event.touches[0];
   x1 = firstTouch.clientX;
+  handleChanged = true;
 }
 function handleTouchMove(event) {
   if (!x1) return false;
+  handleChanged = true;
   let x2 = event.touches[0].clientX;
   xDif = x2 - x1;
   if (Math.abs(xDif) >= 75) return false;
@@ -143,9 +142,11 @@ function handleTouchEnd(event) {
 function onMouseDown(event) {
   const firstTouch = event.clientX;
   x1 = firstTouch;
+  handleChanged = true;
 }
 function onMouseMove(event) {
   if (!x1) return false;
+  handleChanged = true;
   let x2 = event.clientX;
   xDif = x2 - x1;
   if (Math.abs(xDif) >= 150) return false;
@@ -154,7 +155,6 @@ function onMouseMove(event) {
   }
 }
 function onMouseUp(event) {
-  console.log("mouseup");
   if (xDif <= -150) {
     nextSlide();
   } else if (xDif >= 150) {
