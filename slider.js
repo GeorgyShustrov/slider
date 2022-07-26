@@ -24,11 +24,13 @@ for (let i = 0; i < slides.length; i++) {
 }
 let activeIndex = 0;
 activeSlide(activeIndex);
+
+let autoSwipeId = autoSwipe();
 //показать следующий слайд
 const nextSlide = () => {
   handleChanged = true;
-  nextButton.removeEventListener("click", nextSlide);
-  prevButton.removeEventListener("click", prevSlide);
+  nextButton.removeEventListener("click", nextButtonClick);
+  prevButton.removeEventListener("click", prevButtonClick);
   let offset2 = 0;
 
   for (let i = 0; i < slides.length; i++) {
@@ -42,18 +44,22 @@ const nextSlide = () => {
     slide.style.left = offset2 * viewport - viewport + "px";
     slider.appendChild(slide);
     slides.push(slide);
-    nextButton.addEventListener("click", nextSlide);
-    prevButton.addEventListener("click", prevSlide);
+    nextButton.addEventListener("click", nextButtonClick);
+    prevButton.addEventListener("click", prevButtonClick);
   }, 500);
 
   activeIndex++;
   activeSlide(activeIndex);
 };
+function nextButtonClick() {
+  clearInterval(autoSwipeId);
+  nextSlide();
+  autoSwipeId = autoSwipe();
+}
 //показать предыдущий слайд
 const prevSlide = () => {
-  handleChanged = true;
-  nextButton.removeEventListener("click", nextSlide);
-  prevButton.removeEventListener("click", prevSlide);
+  nextButton.removeEventListener("click", nextButtonClick);
+  prevButton.removeEventListener("click", prevButtonClick);
   let offset2 = 0;
   let slide = slides.pop();
   slide.remove();
@@ -69,10 +75,15 @@ const prevSlide = () => {
     activeSlide(activeIndex);
   }, 0);
   setTimeout(() => {
-    nextButton.addEventListener("click", nextSlide);
-    prevButton.addEventListener("click", prevSlide);
+    nextButton.addEventListener("click", nextButtonClick);
+    prevButton.addEventListener("click", prevButtonClick);
   }, 500);
 };
+function prevButtonClick() {
+  clearInterval(autoSwipeId);
+  prevSlide();
+  autoSwipeId = autoSwipe();
+}
 //по индексу переставляем класс active
 function activeSlide(index) {
   if (index < 0) {
@@ -93,14 +104,13 @@ function activeSlide(index) {
 //привязываем события на кнопки
 nextButton.addEventListener("click", nextSlide);
 prevButton.addEventListener("click", prevSlide);
-
-setInterval(() => {
-  //если переключали вручную, пропускаем 1 переключение
-  if (!handleChanged) {
+function autoSwipe() {
+  let intervalId = setInterval(() => {
     nextSlide();
-  }
-  handleChanged = false;
-}, 4000);
+  }, 4000);
+  return intervalId;
+}
+
 let x1 = null,
   xDif = null;
 
@@ -112,6 +122,7 @@ slider.addEventListener("touchstart", handleTouchStart, false);
 slider.addEventListener("touchmove", handleTouchMove, false);
 slider.addEventListener("touchend", handleTouchEnd, false);
 function handleTouchStart(event) {
+  clearInterval(autoSwipeId);
   const firstTouch = event.touches[0];
   x1 = firstTouch.clientX;
   handleChanged = true;
@@ -136,17 +147,18 @@ function handleTouchEnd(event) {
       slides[i].style.left = i * viewport - viewport + "px";
     }
   }
+  autoSwipeId = autoSwipe();
   x1 = null;
   xDif = null;
 }
 function onMouseDown(event) {
+  clearInterval(autoSwipeId);
   const firstTouch = event.clientX;
   x1 = firstTouch;
-  handleChanged = true;
 }
 function onMouseMove(event) {
   if (!x1) return false;
-  handleChanged = true;
+
   let x2 = event.clientX;
   xDif = x2 - x1;
   if (Math.abs(xDif) >= 150) return false;
@@ -166,4 +178,5 @@ function onMouseUp(event) {
   }
   x1 = null;
   xDif = null;
+  autoSwipeId = autoSwipe();
 }
